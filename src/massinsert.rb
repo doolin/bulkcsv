@@ -39,9 +39,6 @@ def mass_insert
     execute_result = CONN.execute sql
     puts execute_result.class
     puts execute_result.inspect
-    #insert_result = CONN.insert sql
-    #puts insert_result.class
-    #puts insert_result
 end
 
 def mass_insert_connection_quote
@@ -60,6 +57,23 @@ def mass_insert_connection_quote
     #puts insert_result
 end
 
+# Another way to do bulk loading from
+# http://stackoverflow.com/questions/15317837/bulk-insert-records-into-active-record-table
+
+=begin
+def bulk_load
+  batch,batch_size = [], 1_000 
+  CSV.foreach("/data/new_products.csv", :headers => true) do |row|
+    batch << Product.new(row)
+
+    if batch.size >= batch_size
+      Product.import batch
+      batch = []
+    end
+  end
+  Product.import batch
+end
+=end
 
 def activerecord_extensions_mass_insert(validate = true)
     columns = [:score, :node_id, :user_id]
